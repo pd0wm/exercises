@@ -15,13 +15,14 @@ Which starting number, under one million, produces the longest chain?
 NOTE: Once the chain starts the terms are allowed to go above one million.
 -}
 
-collatz :: Int -> Int
-collatz = (map collatz' [0..1000] !!)
-	where collatz' n
+-- compile with: ghc -O3 014.hs
+
+collatzCalc :: Int -> Int
+collatzCalc n
 		| n == 1 = 1
-		| even n = collatz (n `quot` 2) + 1
-		| odd n = collatz (3*n + 1) + 1
+		| even n = collatzCalc (n `quot` 2) + 1
+		| odd n = collatzCalc (3*n + 1) + 1
+		| otherwise = 0
 
-
-main = putStrLn $ show $ maximum $ [collatz x | x <- [1..1000000]]
--- TODO: Add memoization of all collatz lengths below a certain value, which is very messy in haskell
+main = putStrLn $ show $ snd $ maximum $ zip [collatzCalc x | x <- [1..1000000]] [1..]
+-- 837799

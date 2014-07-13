@@ -24,3 +24,5 @@ isAmicable n = n == a && a /= b
 
 main = putStrLn $ show $ sum $ filter isAmicable [1..9999]
 -- 31626
+
+-- TODO: add more efficient method to calculate sum divisors

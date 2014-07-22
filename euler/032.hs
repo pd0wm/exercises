@@ -14,12 +14,13 @@ HINT: Some products can be obtained in more than one way so be sure to only incl
 
 import Data.List
 
+slice :: Int -> Int -> [Char] -> [Char]
 slice from to xs = take (to - from + 1) (drop from xs)
 
 products :: [Int]
 products = [z | p <- permutations ['1'..'9'], 
-				a <- [0..6],
-				b <- [(a+2)..8],
+				a <- [0..2],
+				let b = 5,
 				let x = read (slice 0 a p),
 				let y = read (slice (a+1) (b-1) p),
 				let z = read (slice b 8 p),
@@ -27,4 +28,4 @@ products = [z | p <- permutations ['1'..'9'],
 
 main = putStrLn $ show $ sum $ nub $ products
 -- 45228
--- This naive approach works but takes around 50s
+-- This naive approach works but takes around 5s

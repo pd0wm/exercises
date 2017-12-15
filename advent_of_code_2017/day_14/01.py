@@ -1,3 +1,7 @@
+import numpy as np
+from scipy.ndimage.measurements import label
+
+
 def knot_hash(s):
     N = 256
     l = range(0, N)
@@ -31,4 +35,19 @@ def knot_hash(s):
     return ''.join(dense_hash)
 
 
-print knot_hash(open('input.txt').read().rstrip())
+puzzle_input = "stpzcrnm"
+
+total = []
+for i in range(0, 128):
+    s = puzzle_input + '-' + str(i)
+
+    int_hash = int(knot_hash(s), 16)
+    bin_hash = "{0:0128b}".format(int_hash)
+    list_hash = map(int, bin_hash)
+
+    total.append(list_hash)
+total = np.array(total)
+
+_, num_groups = label(total)
+print 'part 1:', total.sum()
+print 'part 2:', num_groups

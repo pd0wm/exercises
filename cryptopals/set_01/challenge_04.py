@@ -1,21 +1,38 @@
 #!/usr/bin/env python3
+import scipy.stats
+from collections import Counter
+
+
+def is_printable(s):
+    if s in [ord('\n'), ord('\t'), ord('\r')]:
+        return True
+    if s < 32:
+        return False
+
+    return True
 
 
 def english_score(s):
-    englishLetterFreq = {'E': 12.70, 'T': 9.06, 'A': 8.17, 'O': 7.51, 'I': 6.97, 'N': 6.75, 'S': 6.33, 'H': 6.09, 'R': 5.99, 'D': 4.25, 'L': 4.03, 'C': 2.78, 'U': 2.76, 'M': 2.41, 'W': 2.36, 'F': 2.23, 'G': 2.02, 'Y': 1.97, 'P': 1.93, 'B': 1.29, 'V': 0.98, 'K': 0.77, 'J': 0.15, 'X': 0.15, 'Q': 0.10, 'Z': 0.07, ' ': 0.0}
+    ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    english_letter_freq = {'E': 12.70, 'T': 9.06, 'A': 8.17, 'O': 7.51, 'I': 6.97, 'N': 6.75, 'S': 6.33, 'H': 6.09, 'R': 5.99, 'D': 4.25, 'L': 4.03, 'C': 2.78, 'U': 2.76, 'M': 2.41, 'W': 2.36, 'F': 2.23, 'G': 2.02, 'Y': 1.97, 'P': 1.93, 'B': 1.29, 'V': 0.98, 'K': 0.77, 'J': 0.15, 'X': 0.15, 'Q': 0.10, 'Z': 0.07}
 
-    r = 0.0
-    if not all(31 < char < 128 for char in s):
-        r -= 1000.0
-
+    num_printable = 0
+    num_good_chars = 0
     for c in s:
-        cc = chr(c)
-        if cc.upper() in englishLetterFreq:
-            r += englishLetterFreq[cc.upper()]
-        else:
-            r -= 20.0
+        if is_printable(c):
+            num_printable += 1
+        if chr(c).upper() in ALPHABET:
+            num_good_chars += 1
 
-    return r
+    if num_printable < 0.95 * len(s):
+        return -1
+
+    counts = Counter([chr(c).upper() for c in s])
+    actual = [counts.get(c, 0) for c in ALPHABET]
+    expected = [english_letter_freq[c] / 100. * num_good_chars for c in ALPHABET]
+
+    _, p = scipy.stats.chisquare(actual, expected)
+    return p + num_good_chars / len(s)
 
 
 if __name__ == "__main__":

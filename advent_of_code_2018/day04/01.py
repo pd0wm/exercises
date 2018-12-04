@@ -1,56 +1,24 @@
 #!/usr/bin/env python2
 
-f = open('input.txt')
-import datetime
 import numpy as np
+from datetime import datetime
 from collections import defaultdict
 
+# Load file and sort
+f = sorted(open('input.txt').readlines())
 
-# Types of events
-WAKEUP = 1
-SLEEPS = 2
-NEW_GUARD = 3
-
-
-# Build list of events that can be sorted later
-events = []
+guards = defaultdict(lambda : np.zeros(60))
 for line in f:
     line = line.rstrip()
+    dtime = datetime.strptime(line[1:].split(']')[0], '%Y-%m-%d %H:%M')
 
-    # Time parsing
-    time = line[1:].split(']')[0].replace('-', ' ').replace(':', ' ')
-    time = time.split(' ')
-    time = map(int, time)
-    dtime = datetime.datetime(*time)
-
-    # Create correct event
-    if 'wakes' in line:
-        event = (WAKEUP, 0)
+    if 'Guard' in line:
+        cur_guard = int(line[line.find('#'):][1:].split(' ')[0])
     elif 'falls' in line:
-        event = (SLEEPS, 0)
-    elif 'Guard' in line:
-        guard = int(line[line.find('#'):][1:].split(' ')[0])
-        event = (NEW_GUARD, guard)
-    events.append((dtime, event))
-
-
-# Sort events by date
-events.sort(key=lambda x: x[0])
-
-
-# Create dict with lists for each guard indicating how many times they were asleep at that minute
-cur_guard = -1
-sleep_start = -1
-guards = defaultdict(lambda : np.zeros(60))
-for time, (event, guard_id) in events:
-    if event == NEW_GUARD:
-        cur_guard = guard_id
-    elif event == SLEEPS:
-        sleep_start = time.minute
-    elif event == WAKEUP:
-        sleep_end = time.minute
+        sleep_start = dtime.minute
+    elif 'wakes' in line:
+        sleep_end = dtime.minute
         guards[cur_guard][sleep_start:sleep_end] += 1
-
 
 # Turn dict into useful numpy arrays
 guard_ids = []
@@ -64,7 +32,6 @@ minutes = np.asarray(minutes)
 totals = np.sum(minutes, axis=1)
 most_asleep_guard = np.argmax(totals)
 print guard_ids[most_asleep_guard] * np.argmax(minutes[most_asleep_guard])
-
 
 # Question 2
 m = np.unravel_index(np.argmax(minutes, axis=None), minutes.shape)

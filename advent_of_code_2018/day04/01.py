@@ -21,11 +21,7 @@ for line in f:
         guards[cur_guard][sleep_start:sleep_end] += 1
 
 # Turn dict into useful numpy arrays
-guard_ids = []
-minutes = []
-for g, m in guards.items():
-    guard_ids.append(g)
-    minutes.append(m)
+guard_ids, minutes = zip(*guards.iteritems())
 minutes = np.asarray(minutes)
 
 # Question 1

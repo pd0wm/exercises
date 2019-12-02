@@ -1,16 +1,20 @@
-use std::error::Error;
-use std::io::{BufRead, BufReader};
+use std::io;
+use std::io::BufRead;
 use std::fs::File;
+use std::str::FromStr;
+use std::error::Error;
 
-pub fn read_input(filename : &String) -> Result<Vec<i64>, Box<dyn Error>> {
+pub fn read_input<T>(filename : &str) -> io::Result<Vec<T>>
+where T: FromStr, T::Err: 'static + Error + Send + Sync
+{
     let mut r = Vec::new();
 
     let file = File::open(filename)?;
-    let br = BufReader::new(file);
+    let br = io::BufReader::new(file);
 
     for line in br.lines() {
         let line = line?;
-        let n = line.parse()?;
+        let n = line.parse().map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
         r.push(n);
     }
 

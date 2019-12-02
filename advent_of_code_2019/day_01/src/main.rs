@@ -31,7 +31,7 @@ fn part_two(input : &Vec<i64>) -> i64{
 fn main() {
     let args: Vec<String> = env::args().collect();
     let filename = &args[1];
-    let input = read_input(filename).expect("Error reading input");
+    let input : Vec<i64> = read_input(filename).expect("Error reading input");
 
     println!("Part 1: {}", part_one(&input));
     println!("Part 2: {}", part_two(&input));

@@ -8,3 +8,6 @@ edition = "2018"
 
 [dependencies]
 advent = { path = "../advent" }
+num-derive = "0.3.0"
+num-traits = "0.2"
+num = "0.2.0"

@@ -1,6 +1,10 @@
 use std::env;
 use advent::read_input;
 
+#[macro_use]
+extern crate num_derive;
+extern crate num;
+
 #[derive(Debug)]
 struct ProgramState {
     halted: bool,
@@ -12,6 +16,13 @@ struct Arguments {
     a : i64,
     b : i64,
     result_location : usize,
+}
+
+#[derive(FromPrimitive)]
+enum Opcode {
+    Add = 1,
+    Multiply = 2,
+    Halt = 99,
 }
 
 fn get_arguments(state : &ProgramState) -> Arguments {
@@ -29,22 +40,22 @@ fn get_arguments(state : &ProgramState) -> Arguments {
 
 
 fn step(mut state : ProgramState) -> ProgramState {
-    let instruction = state.values[state.pos];
+    let instruction : Opcode = num::FromPrimitive::from_i64(state.values[state.pos]).expect("Unkown instruction");
+
     match instruction {
-        1 => { // Add
+        Opcode::Add => {
             let args = get_arguments(&state);
             state.values[args.result_location] = args.a + args.b;
             state.pos += 4;
         }
-        2 => { // Multiply
+        Opcode::Multiply => {
             let args = get_arguments(&state);
             state.values[args.result_location] = args.a * args.b;
             state.pos += 4;
         }
-        99 => {
+        Opcode::Halt => {
             state.halted = true;
         }
-        _ => {}
     }
 
     return state;

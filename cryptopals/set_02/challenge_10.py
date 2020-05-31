@@ -33,3 +33,11 @@ if __name__ == "__main__":
             iv = ciphertext_block
 
         print(plaintext)
+
+        iv = b"\x00" * BLOCK_SIZE
+        cipher = Cipher(algorithms.AES(KEY), modes.CBC(iv), backend=backend)
+        decryptor = cipher.decryptor()
+        plaintext_check = decryptor.update(ciphertext) + decryptor.finalize()
+        plaintext_check = plaintext_check.decode('utf8')
+
+        assert(plaintext_check == plaintext)

@@ -2,57 +2,44 @@
 import math
 import cmath
 
-with open('input_12') as f:
-    rows = [x.strip() for x in f]
+DIRS = {
+    'N': 1j,
+    'S': -1j,
+    'E': 1,
+    'W': -1,
+}
 
-# Part 1
-ship = 0 + 0j
-wp = 1 + 0j
+def movement(d, a):
+    if d in DIRS:
+        return a * DIRS[d]
+    else:
+        return 0
 
-for r in rows:
-    d = r[0]
-    a = int(r[1:])
+def step(ship, wp, instruction, move_ship=True):
+    d = instruction[0]
+    a = int(instruction[1:])
 
-    if d == 'N':
-        ship += 1j * a
-    elif d == 'S':
-        ship -= 1j * a
-    elif d == 'E':
-        ship += a
-    elif d == 'W':
-        ship -= a
-    elif d == 'L':
-        wp = wp * cmath.exp(1j * math.radians(a))
+    if move_ship:
+        ship += movement(d, a)
+    else:
+        wp += movement(d, a)
+
+    if d == 'L':
+        wp *= cmath.exp(1j * math.radians(a))
     elif d == 'R':
-        wp = wp * cmath.exp(1j * math.radians(-a))
+        wp *= cmath.exp(1j * math.radians(-a))
     elif d == 'F':
         ship += a * wp
 
-x = abs(ship.real) + abs(ship.imag)
-print(round(x))
+    return ship, wp
 
-# Part 2
-ship = 0 + 0j
-wp = 10 + 1j
 
-for r in rows:
-    d = r[0]
-    a = int(r[1:])
+if __name__ == "__main__":
+    with open('input_12') as f:
+        rows = [x.strip() for x in f]
 
-    if d == 'N':
-        wp += 1j * a
-    elif d == 'S':
-        wp -= 1j * a
-    elif d == 'E':
-        wp += a
-    elif d == 'W':
-        wp -= a
-    elif d == 'L':
-        wp = wp * cmath.exp(1j * math.radians(a))
-    elif d == 'R':
-        wp = wp * cmath.exp(1j * math.radians(-a))
-    elif d == 'F':
-        ship += a * wp
-
-x = abs(ship.real) + abs(ship.imag)
-print(round(x))
+    for wp, move_ship in ((1 + 0j, True), (10 + 1j, False)):
+        ship = 0 + 0j
+        for r in rows:
+            ship, wp = step(ship, wp, r, move_ship)
+        print(round(abs(ship.real) + abs(ship.imag)))

@@ -7,10 +7,8 @@ def solve(numbers, repeat=2):
         if sum(s) == 2020:
             return math.prod(s)
 
-numbers = []
 with open('input_01') as f:
-    for line in f:
-        numbers.append(int(line))
+    numbers = [int(l) for l in f]
 
 print(solve(numbers, 2))
 print(solve(numbers, 3))

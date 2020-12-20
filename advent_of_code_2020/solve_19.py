@@ -45,21 +45,12 @@ if __name__ == "__main__":
         # Parse messages
         messages = [l.strip() for l in f]
 
-        solution_01 = 0
-        r = expand_rule(rules, rules[0], 0)
-        p = re.compile(r)
-
-        for m in messages:
-            if re.fullmatch(p, m) is not None:
-                solution_01 += 1
-        print(solution_01)
+        p = re.compile(expand_rule(rules, rules[0], 0))
+        print(sum([1 if re.fullmatch(p, m) else 0 for m in messages]))
 
         solution_02 = 0
         for n in range(1, 50):
-            r = expand_rule(rules, rules[0], n)
-            p = re.compile(r)
-            for m in messages:
-                if re.fullmatch(p, m) is not None:
-                    solution_02 += 1
+            p = re.compile(expand_rule(rules, rules[0], n))
+            solution_02 += sum([1 if re.fullmatch(p, m) else 0 for m in messages])
 
         print(solution_02)

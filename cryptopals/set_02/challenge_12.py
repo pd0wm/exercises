@@ -2,30 +2,14 @@
 
 import os
 import base64
-import random
-from collections import Counter
+from helpers import blocks, encrypt_ecb, decrypt_ecb
 
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import padding
-
-
-KEY = os.urandom(16)
 MAGIC_STRING = base64.b64decode("Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK")
 
 
 def ecb_encryption_oracle(prefix):
     plaintext = prefix + MAGIC_STRING
-
-    padder = padding.PKCS7(16 * 8).padder()
-    plaintext = padder.update(plaintext) + padder.finalize()
-
-    backend = default_backend()
-    cipher = Cipher(algorithms.AES(KEY), modes.ECB(), backend=backend)
-    encryptor = cipher.encryptor()
-
-    ciphertext = encryptor.update(plaintext) + encryptor.finalize()
-    return ciphertext
+    return encrypt_ecb(plaintext)
 
 
 def find_block_size():
@@ -45,7 +29,6 @@ def find_block_size():
             len_1 = cur_len
 
         n += 1
-    return n
 
 
 if __name__ == "__main__":

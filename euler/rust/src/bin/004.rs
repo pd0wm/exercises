@@ -16,7 +16,6 @@ fn solve(max_digits: u32) -> u64 {
     return largest;
 }
 
-
 fn main() {
     println!("{}", solve(3))
 }

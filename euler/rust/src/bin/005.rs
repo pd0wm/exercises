@@ -1,4 +1,3 @@
-
 fn solve(max: u64) -> u64 {
     let mut r = 1;
     for i in 1..=max {
@@ -6,7 +5,6 @@ fn solve(max: u64) -> u64 {
     }
     return r;
 }
-
 
 fn main() {
     println!("{}", solve(20))

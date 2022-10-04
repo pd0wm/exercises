@@ -1,4 +1,4 @@
-fn is_prime(n: u64) -> bool{
+fn is_prime(n: u64) -> bool {
     let mut i = 2u64;
 
     if n == 1 {
@@ -7,7 +7,7 @@ fn is_prime(n: u64) -> bool{
 
     while i * i <= n {
         if n % i == 0 {
-            return  false;
+            return false;
         }
         i += 1;
     }
@@ -28,11 +28,9 @@ fn nth_prime(n: u64) -> u64 {
     return i;
 }
 
-
 fn main() {
     println!("{}", nth_prime(10_001));
 }
-
 
 #[cfg(test)]
 mod tests {

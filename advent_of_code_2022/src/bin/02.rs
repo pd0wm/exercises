@@ -3,7 +3,7 @@
 extern crate test;
 
 fn score(round: &(char, char)) -> u64 {
-    let (a,b) = round;
+    let (a, b) = round;
     let mut score = match b {
         'X' => 1,
         'Y' => 2,

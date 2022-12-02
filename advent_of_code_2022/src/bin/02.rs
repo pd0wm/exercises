@@ -3,26 +3,18 @@
 extern crate test;
 
 fn score(round: &(char, char)) -> u64 {
-    let (a, b) = round;
-    let mut score = match b {
-        'X' => 1,
-        'Y' => 2,
-        'Z' => 3,
+    match round {
+        ('A', 'X') => 3 + 1, // Rock-Rock
+        ('A', 'Y') => 6 + 2, // Rock-Paper
+        ('A', 'Z') => 0 + 3, // Rock Scissors
+        ('B', 'X') => 0 + 1, // Paper-Rock
+        ('B', 'Y') => 3 + 2, // Paper-Paper
+        ('B', 'Z') => 6 + 3, // Paper-Scissors
+        ('C', 'X') => 6 + 1, // Scissors-Rock
+        ('C', 'Y') => 0 + 2, // Scissors-Paper
+        ('C', 'Z') => 3 + 3, // Scissors-Scissors
         _ => unreachable!(),
-    };
-    score += match (a, b) {
-        ('A', 'X') => 3, // Rock-Rock
-        ('A', 'Y') => 6, // Rock-Paper
-        ('A', 'Z') => 0, // Rock Scissors
-        ('B', 'X') => 0, // Paper-Rock
-        ('B', 'Y') => 3, // Paper-Paper
-        ('B', 'Z') => 6, // Paper-Scissors
-        ('C', 'X') => 6, // Scissors-Rock
-        ('C', 'Y') => 0, // Scissors-Paper
-        ('C', 'Z') => 3, // Scissors-Scissors
-        _ => unreachable!(),
-    };
-    score
+    }
 }
 
 fn part1(input: &[(char, char)]) -> u64 {
@@ -36,19 +28,18 @@ fn part1(input: &[(char, char)]) -> u64 {
 fn part2(input: &[(char, char)]) -> u64 {
     let mut total_score = 0;
     for (a, b) in input {
-        let new_move = match (a, b) {
-            ('A', 'X') => (*a, 'Z'), // Rock-Lose -> Scissors
-            ('A', 'Y') => (*a, 'X'), // Rock-Draw -> Rock
-            ('A', 'Z') => (*a, 'Y'), // Rock Win -> Paper
-            ('B', 'X') => (*a, 'X'), // Paper-Lose -> Rock
-            ('B', 'Y') => (*a, 'Y'), // Paper-Draw -> Paper
-            ('B', 'Z') => (*a, 'Z'), // Paper-Win -> Scissors
-            ('C', 'X') => (*a, 'Y'), // Scissors-Lose -> Paper
-            ('C', 'Y') => (*a, 'Z'), // Scissors-Draw -> Scissors
-            ('C', 'Z') => (*a, 'X'), // Scissors-Win -> Rock
+        total_score += match (a, b) {
+            ('A', 'X') => score(&('A', 'Z')), // Rock-Lose -> Scissors
+            ('A', 'Y') => score(&('A', 'X')), // Rock-Draw -> Rock
+            ('A', 'Z') => score(&('A', 'Y')), // Rock Win -> Paper
+            ('B', 'X') => score(&('B', 'X')), // Paper-Lose -> Rock
+            ('B', 'Y') => score(&('B', 'Y')), // Paper-Draw -> Paper
+            ('B', 'Z') => score(&('B', 'Z')), // Paper-Win -> Scissors
+            ('C', 'X') => score(&('C', 'Y')), // Scissors-Lose -> Paper
+            ('C', 'Y') => score(&('C', 'Z')), // Scissors-Draw -> Scissors
+            ('C', 'Z') => score(&('C', 'X')), // Scissors-Win -> Rock
             _ => unreachable!(),
         };
-        total_score += score(&new_move);
     }
     total_score
 }

@@ -2,23 +2,26 @@
 
 extern crate test;
 
-use std::collections::HashSet;
-
 fn priority(item: &char) -> u8 {
     if item.is_lowercase() {
-        (*item as u8) - ('a' as u8) + 1
+        (*item as u8) - ('a' as u8)
     } else {
-        (*item as u8) - ('A' as u8) + 27
+        (*item as u8) - ('A' as u8) + 26
     }
+}
+
+fn get_hash(input: &[char]) -> u64 {
+    input.iter().fold(0u64, |acc, c| acc | (1u64 << priority(c)))
 }
 
 fn part1(input: &[Vec<char>]) -> u64 {
     let mut total = 0u64;
     for line in input {
-        let first: HashSet<&char> = HashSet::from_iter(line[..line.len() / 2].iter());
-        let second: HashSet<&char> = HashSet::from_iter(line[line.len() / 2..].iter());
-        let shared = *first.intersection(&second).nth(0).unwrap();
-        total += priority(shared) as u64;
+        let first = get_hash(&line[..line.len() / 2]);
+        let second = get_hash(&line[line.len() / 2..]);
+        let shared = first & second;
+
+        total += (u64::BITS - shared.leading_zeros()) as u64;
     }
     total
 }
@@ -27,13 +30,9 @@ fn part2(input: &[Vec<char>]) -> u64 {
     let mut total = 0u64;
     for chunk in input.chunks(3) {
         if let [a, b, c] = chunk {
-            let a: HashSet<&char> = HashSet::from_iter(a);
-            let b: HashSet<&char> = HashSet::from_iter(b);
-            let c: HashSet<&char> = HashSet::from_iter(c);
-
-            let shared: HashSet<&char> = a.intersection(&b).map(|c| *c).collect();
-            let shared = *shared.intersection(&c).nth(0).unwrap();
-            total += priority(shared) as u64;
+            let (a, b, c) = (get_hash(&a), get_hash(&b), get_hash(&c));
+            let shared = a & b & c;
+            total += (u64::BITS - shared.leading_zeros()) as u64;
         }
     }
     total

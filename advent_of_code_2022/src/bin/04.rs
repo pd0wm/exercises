@@ -51,7 +51,7 @@ fn main() {
 }
 
 #[cfg(test)]
-mod day01_tests {
+mod day04_tests {
     use super::*;
     use test::{black_box, Bencher};
 

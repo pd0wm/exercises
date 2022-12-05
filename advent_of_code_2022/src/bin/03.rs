@@ -11,7 +11,9 @@ fn priority(item: &char) -> u8 {
 }
 
 fn get_hash(input: &[char]) -> u64 {
-    input.iter().fold(0u64, |acc, c| acc | (1u64 << priority(c)))
+    input
+        .iter()
+        .fold(0u64, |acc, c| acc | (1u64 << priority(c)))
 }
 
 fn part1(input: &[Vec<char>]) -> u64 {

@@ -6,7 +6,7 @@ use itertools::Itertools;
 
 fn find_marker(input: &Vec<char>, length: usize) -> usize {
     for (i, window) in input.windows(length).enumerate() {
-        if window.iter().unique().count() == length {
+        if window.iter().all_unique() {
             return i + length;
         }
     }

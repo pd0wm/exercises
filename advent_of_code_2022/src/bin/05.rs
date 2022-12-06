@@ -18,7 +18,7 @@ fn part1(init: &Vec<VecDeque<char>>, moves: &Vec<(usize, usize, usize)>) -> Stri
 
 fn part2(init: &Vec<VecDeque<char>>, moves: &Vec<(usize, usize, usize)>) -> String {
     let mut state = init.clone();
-    let mut tmp_stack = VecDeque::new();
+    let mut tmp_stack = VecDeque::new(); // Using a tmp stack is faster than VecDeque::split_off()
 
     for (n, from, to) in moves {
         for _ in 0..*n {

@@ -13,7 +13,6 @@ fn find_marker(input: &Vec<char>, length: usize) -> usize {
     panic!("marker not found");
 }
 
-
 fn part1(input: &Vec<char>) -> usize {
     find_marker(input, 4)
 }

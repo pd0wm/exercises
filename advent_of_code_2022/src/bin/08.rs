@@ -49,64 +49,74 @@ fn part1(input: &Input) -> u64 {
     visible.iter().sum()
 }
 
-fn scenic_score(input: &Input, x: i64, y: i64) -> u64 {
-    let sz = input.len() as i64;
-
-    let mut score = 1;
-
-    let height = input[y as usize][x as usize];
-
-    for (i, x) in (x + 1..sz + 1).enumerate() {
-        if x == sz {
-            score *= i;
-            break;
-        } else if input[y as usize][x as usize] >= height {
-            score *= i + 1;
-            break;
-        }
-    }
-    for (i, x) in (-1..x).rev().enumerate() {
-        if x == -1 {
-            score *= i;
-            break;
-        } else if input[y as usize][x as usize] >= height {
-            score *= i + 1;
-            break;
-        }
-    }
-    for (i, y) in (y + 1..sz + 1).enumerate() {
-        if y == sz {
-            score *= i;
-            break;
-        } else if input[y as usize][x as usize] >= height {
-            score *= i + 1;
-            break;
-        }
-    }
-    for (i, y) in (-1..y).rev().enumerate() {
-        if y == -1 {
-            score *= i;
-            break;
-        } else if input[y as usize][x as usize] >= height {
-            score *= i + 1;
-            break;
-        }
-    }
-
-    score as u64
-}
-
 fn part2(input: &Input) -> u64 {
-    let sz = input.len() as i64;
-    (1..sz - 1)
-        .map(|y| {
-            (1..sz - 1)
-                .map(|x| scenic_score(input, x, y))
-                .max()
-                .unwrap()
-        })
-        .max()
-        .unwrap()
+    let sz = input.len();
+    let mut score = vec![1; sz * sz];
+
+    let mut work: Vec<usize> = Vec::new();
+    work.reserve(sz);
+
+    for y in 0..sz {
+        for x in 0..sz {
+            let cur = input[y][x];
+            while work.len() > 0 && cur >= input[y][work[work.len() - 1]] {
+                if let Some(xx) = work.pop() {
+                    score[xx + y * sz] *= x - xx;
+                }
+            }
+            work.push(x);
+        }
+
+        while let Some(xx) = work.pop() {
+            score[xx + y * sz] *= sz - xx - 1;
+        }
+
+        for x in (0..sz).rev() {
+            let cur = input[y][x];
+            while work.len() > 0 && cur >= input[y][work[work.len() - 1]] {
+                if let Some(xx) = work.pop() {
+                    score[xx + y * sz] *= xx - x;
+                }
+            }
+            work.push(x);
+        }
+
+        while let Some(xx) = work.pop() {
+            score[xx + y * sz] *= xx;
+        }
+    }
+
+    for x in 0..sz {
+        for y in 0..sz {
+            let cur = input[y][x];
+            while work.len() > 0 && cur >= input[work[work.len() - 1]][x] {
+                if let Some(yy) = work.pop() {
+                    score[x + yy * sz] *= y - yy;
+                }
+            }
+            work.push(y);
+        }
+
+        while let Some(yy) = work.pop() {
+            score[x + yy * sz] *= sz - yy - 1;
+        }
+
+        for y in (0..sz).rev() {
+            let cur = input[y][x];
+            while work.len() > 0 && cur >= input[work[work.len() - 1]][x] {
+                if let Some(yy) = work.pop() {
+                    score[x + yy * sz] *= yy - y;
+                }
+            }
+            work.push(y);
+        }
+
+        while let Some(yy) = work.pop() {
+            score[x + yy * sz] *= yy;
+        }
+    }
+
+    *score.iter().max().unwrap() as u64
 }
 
 fn parse_input() -> Input {
@@ -138,7 +148,6 @@ mod day08_tests {
             vec![3, 5, 3, 9, 0],
         ];
         assert_eq!(21, part1(&sample_input));
-        assert_eq!(4, scenic_score(&sample_input, 2, 1));
         assert_eq!(8, part2(&sample_input));
     }
 

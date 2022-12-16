@@ -58,7 +58,7 @@ fn part2(input: &Input) -> u64 {
 
     for y in 0..sz {
         for x in 0..sz {
-            let cur = if x == sz -1 { 10 } else {input[y][x]};
+            let cur = if x == sz - 1 { 10 } else { input[y][x] };
             while work.len() > 0 && cur >= input[y][work[work.len() - 1]] {
                 if let Some(xx) = work.pop() {
                     score[xx + y * sz] *= x - xx;
@@ -68,7 +68,7 @@ fn part2(input: &Input) -> u64 {
         }
 
         for x in (0..sz).rev() {
-            let cur = if x == 0 { 10 } else {input[y][x]};
+            let cur = if x == 0 { 10 } else { input[y][x] };
             while work.len() > 0 && cur >= input[y][work[work.len() - 1]] {
                 if let Some(xx) = work.pop() {
                     score[xx + y * sz] *= xx - x;
@@ -80,7 +80,7 @@ fn part2(input: &Input) -> u64 {
 
     for x in 0..sz {
         for y in 0..sz {
-            let cur = if y == sz-1 { 10 } else {input[y][x]};
+            let cur = if y == sz - 1 { 10 } else { input[y][x] };
             while work.len() > 0 && cur >= input[work[work.len() - 1]][x] {
                 if let Some(yy) = work.pop() {
                     score[x + yy * sz] *= y - yy;
@@ -90,7 +90,7 @@ fn part2(input: &Input) -> u64 {
         }
 
         for y in (0..sz).rev() {
-            let cur = if y == 0 { 10 } else {input[y][x]};
+            let cur = if y == 0 { 10 } else { input[y][x] };
             while work.len() > 0 && cur >= input[work[work.len() - 1]][x] {
                 if let Some(yy) = work.pop() {
                     score[x + yy * sz] *= yy - y;

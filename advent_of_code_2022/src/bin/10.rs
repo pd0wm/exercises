@@ -39,10 +39,12 @@ impl Machine {
     }
 
     fn cycle(&mut self) {
+        let cursor_x = (self.cycles % 40) as i64;
+        self.crt.push((cursor_x - self.x).abs() <= 1);
+
         self.cycles += 1;
+
         self.signal_strengths.push(self.signal_strength());
-        self.crt
-            .push((((self.cycles as i64 - 1) % 40) - self.x).abs() <= 1);
     }
 
     fn run_program(&mut self, instructions: &[Instruction]) {

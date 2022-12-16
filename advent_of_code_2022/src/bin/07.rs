@@ -141,7 +141,7 @@ mod day07_tests {
 
     #[bench]
     fn bench_parsing(b: &mut Bencher) {
-        b.iter(|| parse_input(include_str!("../../inputs/01.txt").trim()));
+        b.iter(|| parse_input(include_str!("../../inputs/07.txt").trim()));
     }
 
     #[bench]

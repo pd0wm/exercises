@@ -2,6 +2,8 @@
 
 extern crate test;
 
+use itertools::Itertools;
+
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -18,7 +20,7 @@ type Input = Vec<Monkey>;
 fn solve(input: &Input, rounds: usize, divide_by_three: bool) -> u64 {
     let mut input: Input = input.clone();
 
-    let modulo = input.iter().fold(1, |i, m| i * m.test.0);
+    let modulo: u64 = input.iter().map(|m| m.test.0).product();
 
     for _ in 0..rounds {
         for i in 0..input.len() {
@@ -42,9 +44,7 @@ fn solve(input: &Input, rounds: usize, divide_by_three: bool) -> u64 {
         }
     }
 
-    let mut counts: Vec<u64> = input.iter().map(|m| m.cnt).collect();
-    counts.sort();
-    counts[counts.len() - 1] * counts[counts.len() - 2]
+    input.iter().map(|m| m.cnt).sorted().rev().take(2).product()
 }
 
 fn part1(input: &Input) -> u64 {

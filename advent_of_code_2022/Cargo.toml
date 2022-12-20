@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 itertools = "*"
+petgraph = "0.6.2"
 
 [features]
